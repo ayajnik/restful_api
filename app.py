@@ -9,6 +9,8 @@ app = Flask(__name__)
 basedir = os.path.abspath(os.path.dirname(__file__))
 app.config['SQLALCHEMY_DATABASE_URI'] =   "sqllite:///" + os.apth.join(basedir,"planets.db")
 
+db = sqlalchemy(app)
+
 
 # creating endpoint for index page
 @app.route("/")
@@ -45,6 +47,26 @@ def url_variables(name:str,age:int):
             return jsonify(message="Sorry " + name + " you are not welcomed"), 401
 
 
+## creating the ORM template for the database
+class User(db.model):
+
+    __tablename__ = "users"
+    id = Column(Integer)
+    first_name = Column(String, primary_key = True)
+    last_name = Column(String)
+    email = Column(String)
+    password = Column(String)
+
+class planets(db.model):
+
+    __tablename__ = "name"
+    planet_id = Column(Integer, primary_key = True)
+    planet_name = Column(String)
+    planet_type = Column(String)
+    home_star = Column(String)
+    mass = Column(Float)
+    distance = Column(Float)
+    radius = Column(Float)
 
 
 
