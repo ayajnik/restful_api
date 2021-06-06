@@ -1,8 +1,14 @@
 ## importing modules
 from flask import Flask, jsonify, request
+from flask_sqlalchemy import sqlalchemy
+from sqlalchemy import Column, String, Integer, Float
+import os
 
 # initializing the app
 app = Flask(__name__)
+basedir = os.path.abspath(os.path.dirname(__file__))
+app.config['SQLALCHEMY_DATABASE_URI'] =   "sqllite:///" + os.apth.join(basedir,"planets.db")
+
 
 # creating endpoint for index page
 @app.route("/")
@@ -37,6 +43,8 @@ def url_variables(name:str,age:int):
     else:
         if age < 18:
             return jsonify(message="Sorry " + name + " you are not welcomed"), 401
+
+
 
 
 
