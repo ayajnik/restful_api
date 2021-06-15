@@ -117,7 +117,24 @@ class User(db.Model):
     last_name = Column(String)
     email = Column(String)
     password = Column(String)
+    
 
+@app.route('/add_user')
+def add_user(method = ['POST']):
+    email = request.form['email']
+    testing_email = User.query.filter_by(email = 'email').first()
+    if testing_email:
+        return jsonify(message = 'This user already exists')
+    else:
+        first_name = request.form['first_name']
+        last_name = request.form['last_name']
+        email = request.form['email']
+        password = request.form['password']
+
+        user = User(first_name = first_name, last_name = last_name, email = email, password = password)
+        db.session.add(user)
+        db.session.commit()
+        return jsonify(message="The user has been added")
 class Planets(db.Model):
 
     __tablename__ = "name"
