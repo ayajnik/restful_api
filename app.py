@@ -119,8 +119,8 @@ class User(db.Model):
     password = Column(String)
     
 
-@app.route('/add_user')
-def add_user(method = ['POST']):
+@app.route('/add_user',methods = ['POST'])
+def add_user():
     email = request.form['email']
     testing_email = User.query.filter_by(email = 'email').first()
     if testing_email:
