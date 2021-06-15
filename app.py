@@ -4,14 +4,29 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, String, Integer, Float
 import os
 from flask_marshmallow import Marshmallow
+from flask_jwt_extended import JWTManager, jwt_required, create_access_token
+from flask_mail import Mail, Message
+
 
 # initializing the app
 app = Flask(__name__)
 basedir = os.path.abspath(os.path.dirname(__file__))
 app.config['SQLALCHEMY_DATABASE_URI'] =  "sqlite:///" + os.path.join(basedir,"planets.db")
+app.config['JWT_SECRET_KEY'] = 'super-secret'
+##register to mail trap and get the credentials from integrations section
+app.config['MAIL_SERVER']='smtp.mailtrap.io'
+app.config['MAIL_PORT'] = 2525
+app.config['MAIL_USERNAME'] = '06770af9465fc0'
+app.config['MAIL_PASSWORD'] = '266b2b0e01c6d1'
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USE_SSL'] = False
+
 
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
+jwt = JWTManager(app)
+mail = Mail(app)
+
 
 @app.cli.command("db_create")
 def db_create():
@@ -135,6 +150,41 @@ def add_user():
         db.session.add(user)
         db.session.commit()
         return jsonify(message="The user has been added")
+
+@app.route('/login', methods = ['POST'])
+def user_login():
+    if request.is_json():
+
+        email = request.json['email']
+        password = request.json['password']
+        testing_email = User.query.filter_by(email = email).first()
+
+    else:
+
+        email = request.form['email']
+        password = request.form['password']
+
+    test =  User.query.filter_by(email = 'email',password=password).first()
+    if test:
+        access_token = create_access_token(email=email)
+        return jsonify(message = "Login succesfull")
+    else:
+        return jsonify(message = "Bad credentials")
+
+
+@app.route('/forgot_password', methods = ['GET'])
+def forgot_password():
+    email = request.args.get('email')
+    test = User.query.filter_by(email = email).first()
+    if test:
+        msg = Message("Your password is "+test.password, sender = "test@test.com", recipients = ['ayushyajnik2@gmail.com'])
+        mail.send(msg)
+    else:
+        return jsonify(message = 'Enter another email address')
+
+
+
+
 class Planets(db.Model):
 
     __tablename__ = "name"
