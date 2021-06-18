@@ -225,6 +225,24 @@ def add_planet():
         return jsonify(message="New planet added")
 
 
+##updating an existing record
+@app.route('/update_data', methods=['PUT'])
+def update_data():
+    planet_id = request.form['planet_id']
+    planet = Planets.query.filter_by(planet_id = planet_id).first()
+    if planet:
+        planet.planet_name = request.form['planet_name']
+        planet.planet_type = request.form['planet_type']
+        planet.home_star = request.form['home_star']
+        planet.mass = request.form['mass']
+        planet.distance = request.form['distance']
+        planet.radius = request.form['radius']
+
+        db.session.commit()
+
+    return jsonify(message="Planet updated")
+
+
 
 
 
