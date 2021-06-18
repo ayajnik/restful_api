@@ -195,7 +195,9 @@ def planet_data(planet_id = int):
 
 
 ##adding new records
+## we will secure this endpoint by json web token
 @app.route('/add_planet', methods=['POST'])
+@jwt_required  ## with this you first have to login, get the access token, go to postman, go to authorization section, select bearer token, enter access token and then send a request
 def add_planet():
     planet_name = request.form['planet_name']
     test = Planets.query.filter_by(planet_name=planet_name).first()
@@ -221,7 +223,7 @@ def add_planet():
         db.session.add()
 
         return jsonify(message="New planet added")
-        
+
 
 
 
