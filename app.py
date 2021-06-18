@@ -242,6 +242,18 @@ def update_data():
 
     return jsonify(message="Planet updated")
 
+##deleting a record
+@app.route('/delete_record', '<int:planet_id>', methods=['DELETE'])
+def delete_record(planet_id:int):
+    planet_id = request.form['planet_id']
+    result = Planets.query.filter_by(planet_id=planet_id).first()
+    if result:
+        db.session.delete(planet_id)
+        db.session.commit()
+        return jsonify(message="Data record deleted")
+    else:
+        return jsonify(message="No data available for this id")
+
 
 
 
