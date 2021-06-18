@@ -182,6 +182,19 @@ def forgot_password():
     else:
         return jsonify(message = 'Enter another email address')
 
+##retrieving the data 
+@app.route('/planet_data/<int:planet_id>', methods=['GET'])
+def planet_data(planet_id = int):
+    planet = Planets.query.filter_by(planet_id=planet_id).first()
+    
+    if planet:
+        result = planet_schema.dump(planet)
+        return jsonify(result.data)
+    else:
+        return jsonify(message="Planet not found")
+
+
+
 
 
 
