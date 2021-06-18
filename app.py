@@ -194,6 +194,34 @@ def planet_data(planet_id = int):
         return jsonify(message="Planet not found")
 
 
+##adding new records
+@app.route('/add_planet', methods=['POST'])
+def add_planet():
+    planet_name = request.form['planet_name']
+    test = Planets.query.filter_by(planet_name=planet_name).first()
+    if test:
+        return jsonify(message="There is already a planet entered by this name.")
+    else:
+        planet_type = request.form['planet_type']
+        home_star = request.form['home_star']
+        mass = float(request.form['form'])
+        distance = float(request.form['distance'])
+        radius = float(request.form['radius'])
+
+        new_planet = Planets(
+            planet_name = planet_name
+            ,planet_type = planet_type
+            ,home_star = home_star
+            ,mass = mass
+            ,distance = distance
+            ,radius = radius
+        )
+
+        db.session.add(new_planet)
+        db.session.add()
+
+        return jsonify(message="New planet added")
+        
 
 
 
